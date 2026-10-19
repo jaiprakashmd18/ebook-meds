@@ -8,6 +8,8 @@
 
 create schema if not exists extensions;
 create extension if not exists pg_trgm with schema extensions;
+-- Supabase already grants this; repeated here so search works on any Postgres.
+grant usage on schema extensions to anon, authenticated, service_role;
 
 create schema if not exists private;
 
