@@ -29,6 +29,11 @@ const nextConfig: NextConfig = {
   // the request-time rendering model rather than Cache Components.
   cacheComponents: false,
   poweredByHeader: false,
+  experimental: {
+    // Cover and inline image uploads go through server actions (max 5 MB each).
+    // Large PDFs are uploaded directly to Storage with signed URLs instead.
+    serverActions: { bodySizeLimit: "6mb" },
+  },
   serverExternalPackages: ["@react-pdf/renderer", "pdf-lib"],
   // Fonts used by the server-side PDF generator are read from disk.
   outputFileTracingIncludes: {
