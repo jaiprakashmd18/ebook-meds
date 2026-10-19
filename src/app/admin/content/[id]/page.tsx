@@ -11,6 +11,7 @@ import { AdminHeader, Panel, StatusBadge } from "@/components/admin/ui";
 import { ContentDetailsForm } from "@/components/admin/content-details-form";
 import { BlockEditor } from "@/components/admin/block-editor";
 import { CoverPanel, PdfPanel, PublishPanel, VersionHistory } from "@/components/admin/content-panels";
+import { NotifyUpdateButton } from "@/components/admin/commerce-forms";
 import { Alert } from "@/components/ui/alert";
 
 const TABS = [
@@ -157,6 +158,12 @@ export default async function EditContentPage({ params, searchParams }: { params
       {tab === "versions" && !isBundle ? (
         <Panel title="Version history" description="Versions are never overwritten. Restoring creates a new version, and readers always see the latest one. Highlights keep a link to the version they were made on.">
           <VersionHistory itemId={item.id} currentVersionId={item.current_version_id} versions={item.versions} canEdit={canEdit} />
+          {item.publication_status === "published" && !item.is_free && can(user.roles, "content.publish") ? (
+            <div className="mt-5 border-t border-border pt-4">
+              <p className="mb-2 text-sm text-muted-foreground">For important corrections, let owners know a new version is available (they can opt out in their preferences).</p>
+              <NotifyUpdateButton itemId={item.id} />
+            </div>
+          ) : null}
         </Panel>
       ) : null}
     </>

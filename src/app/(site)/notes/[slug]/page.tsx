@@ -94,7 +94,7 @@ export default async function NotePage({ params }: Props) {
           </div>
           <p className="text-[17px] leading-relaxed">{item.description}</p>
 
-          <dl className="grid grid-cols-2 gap-x-6 gap-y-3 rounded-[var(--radius-lg)] bg-surface p-5 text-sm sm:grid-cols-3">
+          <dl className="grid grid-cols-2 gap-x-6 gap-y-3 rounded-[var(--radius-lg)] bg-surface p-5 text-sm">
             {!isBundle ? (
               <div>
                 <dt className="text-muted-foreground">Reading time</dt>

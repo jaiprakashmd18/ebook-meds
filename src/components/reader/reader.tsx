@@ -540,7 +540,14 @@ export function Reader({
                 <ul className="mt-3 flex flex-col gap-2">
                   {results.map((r, i) => (
                     <li key={i}>
-                      <button onClick={() => goTo(r.index)} className="w-full rounded-lg p-2.5 text-left text-sm hover:bg-[var(--reader-panel)]">
+                      <button
+                        onClick={() => {
+                          goTo(r.index);
+                          // On small screens the panel covers the text; close it after jumping.
+                          if (window.matchMedia("(max-width: 639px)").matches) setPanel(null);
+                        }}
+                        className="w-full rounded-lg p-2.5 text-left text-sm hover:bg-[var(--reader-panel)]"
+                      >
                         <span className="block text-xs font-medium text-accent">{r.title}</span>
                         <span className="mt-0.5 block text-[var(--reader-muted)]">{r.snippet}</span>
                       </button>

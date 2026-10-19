@@ -240,21 +240,24 @@ function SectionPdf({ section, mcqs, onPage, first }: { section: Section; mcqs: 
   );
 }
 
-function EbookDocument({ meta, doc, pages, onPage }: { meta: PdfMeta; doc: StructuredContent; pages: Map<string, number>; onPage: (id: string, page: number) => void }) {
-  const mcqs: McqRef[] = [];
-  const date = new Date(meta.updatedAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
-  const Chrome = () => (
+function PageChrome({ title, version, date }: { title: string; version: number; date: string }) {
+  return (
     <>
       <View style={s.header} fixed>
-        <Text>{meta.title}</Text>
+        <Text>{title}</Text>
         <Text>StudySimplify</Text>
       </View>
       <View style={s.footer} fixed>
-        <Text>Version {meta.versionNumber} · {date}</Text>
+        <Text>Version {version} · {date}</Text>
         <Text render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`} />
       </View>
     </>
   );
+}
+
+function EbookDocument({ meta, doc, pages, onPage }: { meta: PdfMeta; doc: StructuredContent; pages: Map<string, number>; onPage: (id: string, page: number) => void }) {
+  const mcqs: McqRef[] = [];
+  const date = new Date(meta.updatedAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
   return (
     <Document title={meta.title} author={meta.byline ?? "StudySimplify"} subject={meta.subject} creator="StudySimplify" producer="StudySimplify">
       <Page size="A4" style={s.coverPage}>
@@ -275,7 +278,7 @@ function EbookDocument({ meta, doc, pages, onPage }: { meta: PdfMeta; doc: Struc
       </Page>
 
       <Page size="A4" style={s.page}>
-        <Chrome />
+        <PageChrome title={meta.title} version={meta.versionNumber} date={date} />
         <Text style={s.h2}>Contents</Text>
         {doc.sections.map((sec, i) => (
           <View key={sec.id} style={s.tocRow}>
@@ -293,7 +296,7 @@ function EbookDocument({ meta, doc, pages, onPage }: { meta: PdfMeta; doc: Struc
       </Page>
 
       <Page size="A4" style={s.page} wrap>
-        <Chrome />
+        <PageChrome title={meta.title} version={meta.versionNumber} date={date} />
         {doc.sections.map((sec, i) => <SectionPdf key={sec.id} section={sec} mcqs={mcqs} onPage={onPage} first={i === 0} />)}
 
         {mcqs.length ? (
