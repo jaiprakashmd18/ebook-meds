@@ -1,0 +1,13 @@
+import { chromium } from "@playwright/test";
+const [,, url, out, width = "1280", full = "1"] = process.argv;
+const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || "/opt/pw-browsers/chromium" });
+const page = await browser.newPage({ viewport: { width: Number(width), height: 900 } });
+const errors = [];
+page.on("pageerror", (e) => errors.push(e.message));
+page.on("console", (m) => { if (m.type() === "error") errors.push(m.text()); });
+await page.goto(url, { waitUntil: "load" });
+await page.waitForTimeout(800);
+await page.screenshot({ path: out, fullPage: full === "1" });
+const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+console.log(JSON.stringify({ url, errors, horizontalOverflow: overflow }));
+await browser.close();

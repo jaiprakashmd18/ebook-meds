@@ -1,0 +1,179 @@
+@import "tailwindcss";
+@import "katex/dist/katex.min.css";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/*
+ * Semantic design tokens. Components reference these names only, so the
+ * whole theme can be changed here.
+ */
+:root {
+  --background: #ffffff;
+  --surface: #f5f5f7;
+  --surface-raised: #ffffff;
+  --foreground: #1d1d1f;
+  --muted-foreground: #6e6e73;
+  --border: #e5e5ea;
+  --border-strong: #d2d2d7;
+  --accent: #3478f6;
+  --accent-hover: #2563eb;
+  --accent-foreground: #ffffff;
+  --accent-soft: #eaf1fe;
+  --success: #1a7f37;
+  --success-soft: #e8f5ec;
+  --warning: #9a6700;
+  --warning-soft: #fff6e0;
+  --danger: #c9372c;
+  --danger-soft: #fdecea;
+  --ring: #3478f6;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.04), 0 1px 1px rgb(0 0 0 / 0.02);
+  --shadow-md: 0 4px 16px rgb(0 0 0 / 0.06), 0 1px 3px rgb(0 0 0 / 0.04);
+  --shadow-lg: 0 18px 50px rgb(0 0 0 / 0.08), 0 4px 12px rgb(0 0 0 / 0.04);
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Iowan Old Style", "Charter", "Georgia", "Times New Roman", serif;
+  --font-mono: ui-monospace, "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+[data-theme="dark"] {
+  --background: #000000;
+  --surface: #1c1c1e;
+  --surface-raised: #2c2c2e;
+  --foreground: #f5f5f7;
+  --muted-foreground: #a1a1a6;
+  --border: #38383a;
+  --border-strong: #48484a;
+  --accent: #4b8bff;
+  --accent-hover: #6b9fff;
+  --accent-foreground: #ffffff;
+  --accent-soft: #14233d;
+  --success: #3fb950;
+  --success-soft: #12261a;
+  --warning: #d29922;
+  --warning-soft: #2b2110;
+  --danger: #f85149;
+  --danger-soft: #2d1514;
+  --ring: #4b8bff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-ring: var(--ring);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+}
+
+/* Reader themes are scoped to the reader surface. */
+[data-reader-theme="light"] {
+  --reader-bg: #ffffff;
+  --reader-fg: #1d1d1f;
+  --reader-muted: #6e6e73;
+  --reader-border: #e5e5ea;
+  --reader-panel: #f5f5f7;
+  --reader-highlight: rgb(255 214 10 / 0.45);
+}
+[data-reader-theme="sepia"] {
+  --reader-bg: #f8f1e3;
+  --reader-fg: #3b2f22;
+  --reader-muted: #7a6a55;
+  --reader-border: #e6d9bf;
+  --reader-panel: #f1e7d2;
+  --reader-highlight: rgb(230 170 40 / 0.4);
+}
+[data-reader-theme="dark"] {
+  --reader-bg: #121212;
+  --reader-fg: #e8e8ea;
+  --reader-muted: #a1a1a6;
+  --reader-border: #2c2c2e;
+  --reader-panel: #1c1c1e;
+  --reader-highlight: rgb(255 214 10 / 0.3);
+}
+
+::highlight(ss-highlight) {
+  background-color: var(--reader-highlight, rgb(255 214 10 / 0.45));
+  color: inherit;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  ::selection {
+    background: rgb(52 120 246 / 0.22);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Long-form reading typography used by the note renderer. */
+.prose-study {
+  font-size: var(--reader-font-size, 1.0625rem);
+  line-height: 1.75;
+}
+.prose-study p + p {
+  margin-top: 1em;
+}
+.prose-study .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0;
+}

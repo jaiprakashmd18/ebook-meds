@@ -1,0 +1,30 @@
+import "server-only";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+import { publicEnv, isSupabaseConfigured } from "@/lib/env";
+
+/**
+ * Supabase client bound to the current user's session cookies. All queries
+ * run as that user, so Row Level Security applies.
+ */
+export async function createSupabaseServerClient() {
+  if (!isSupabaseConfigured()) {
+    throw new Error("Supabase is not configured");
+  }
+  const cookieStore = await cookies();
+  return createServerClient(publicEnv.supabaseUrl, publicEnv.supabasePublishableKey, {
+    cookies: {
+      getAll() {
+        return cookieStore.getAll();
+      },
+      setAll(cookiesToSet) {
+        try {
+          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
+        } catch {
+          // Called from a Server Component, where cookies are read-only. The
+          // proxy refreshes the session, so this can be ignored safely.
+        }
+      },
+    },
+  });
+}
